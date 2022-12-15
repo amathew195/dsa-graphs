@@ -97,6 +97,7 @@ class Graph {
   /** find the distance of the shortest path from the start vertex to the end vertex */
   distanceOfShortestPath(start, end, seen = new Set([start])) {
     if (start === end) return 0;
+    let shortestDistance = Infinity;
 
     for (let neighbor of start.adjacent) {
       if (!seen.has(neighbor)) {
@@ -104,11 +105,15 @@ class Graph {
           return 1;
         } else {
           seen.add(neighbor);
-          return 1 + this.distanceOfShortestPath(neighbor, end, seen);
+          console.log(neighbor);
+          shortestDistance = Math.min(
+            1 + this.distanceOfShortestPath(neighbor, end, seen),
+            shortestDistance
+          );
         }
       }
     }
-    return false;
+    return shortestDistance;
   }
 }
 
