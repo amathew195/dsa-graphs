@@ -7,7 +7,6 @@ class Node {
   }
 }
 
-
 /** Graph class. */
 
 class Graph {
@@ -46,7 +45,6 @@ class Graph {
    * - update any adjacency lists using that vertex
    */
   removeVertex(vertex) {
-
     //remove it from nodes property on graph
     this.nodes.delete(vertex);
 
@@ -54,7 +52,6 @@ class Graph {
     for (const neighbor of vertex.adjacent) {
       neighbor.adjacent.delete(vertex);
     }
-
   }
 
   /** traverse graph with DFS and returns array of Node values */
@@ -77,11 +74,42 @@ class Graph {
     return nodesArr;
   }
 
-  /** traverse graph with BDS and returns array of Node values */
-  breadthFirstSearch(start) { }
+  /** traverse graph with BFS and returns array of Node values */
+  breadthFirstSearch(start) {
+    let toVisitQueue = [start];
+    let seen = new Set(toVisitQueue);
+    const nodesArr = [];
+
+    while (toVisitQueue.length > 0) {
+      let currNode = toVisitQueue.shift();
+      nodesArr.push(currNode.value);
+
+      for (let neighbor of currNode.adjacent) {
+        if (!seen.has(neighbor)) {
+          toVisitQueue.push(neighbor);
+          seen.add(neighbor);
+        }
+      }
+    }
+    return nodesArr;
+  }
 
   /** find the distance of the shortest path from the start vertex to the end vertex */
-  distanceOfShortestPath(start, end) { }
+  distanceOfShortestPath(start, end, seen = new Set([start])) {
+    if (start === end) return 0;
+
+    for (let neighbor of start.adjacent) {
+      if (!seen.has(neighbor)) {
+        if (neighbor === end) {
+          return 1;
+        } else {
+          seen.add(neighbor);
+          return 1 + this.distanceOfShortestPath(neighbor, end, seen);
+        }
+      }
+    }
+    return false;
+  }
 }
 
 module.exports = { Graph, Node };
